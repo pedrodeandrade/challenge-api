@@ -4,7 +4,7 @@ use Mix.Config
 config :challenge_api, ChallengeApi.Repo,
   username: "postgres",
   password: "postgres",
-  database: "challenge_api_dev",
+  database: "challenge_api",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
