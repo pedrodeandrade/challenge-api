@@ -12,6 +12,7 @@ defmodule ChallengeApiWeb.ArticleView do
 
   def render("article.json", %{article: article}) do
     %{id: article.id,
+      title: article.title,
       text: article.text}
   end
 end
