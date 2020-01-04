@@ -49,9 +49,9 @@ defmodule ChallengeApi.Submissions do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_article(attrs \\ %{}) do
+  def create_article(attrs \\ %{},user_id) do
     %Article{}
-    |> Article.changeset(attrs)
+    |> Article.changeset(attrs,user_id)
     |> Repo.insert()
   end
 
