@@ -7,9 +7,6 @@ defmodule ChallengeApi.Repo.Migrations.CreateArticles do
       add :text, :string
       add :user_id, references(:users, on_delete: :delete_all)
       timestamps()
-
-
     end
-
   end
 end

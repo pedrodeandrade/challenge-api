@@ -8,6 +8,5 @@ defmodule ChallengeApi.Repo.Migrations.CreateUsers do
       add :age, :integer
       timestamps()
     end
-
   end
 end

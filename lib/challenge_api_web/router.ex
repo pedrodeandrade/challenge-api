@@ -19,17 +19,15 @@ defmodule ChallengeApiWeb.Router do
     get "/", PageController, :index
   end
 
-  scope "/api", ChallengeApiWeb do 
+  scope "/api", ChallengeApiWeb do
     pipe_through :api
 
     get "/users", UserController, :index
-    get "/users/:id/show", UserController,:show
+    get "/users/:id/show", UserController, :show
     post "/users/create", UserController, :create
 
-
-    post "/users/:u_id/article", ArticleController, :create  
-    get  "/articles", ArticleController, :index
-    
+    post "/users/:u_id/article", ArticleController, :create
+    get "/articles", ArticleController, :index
   end
 
   # Other scopes may use custom stacks.

@@ -11,9 +11,6 @@ defmodule ChallengeApiWeb.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{id: user.id,
-      name: user.name,
-      cpf: user.cpf,
-      age: user.age}
+    %{id: user.id, name: user.name, cpf: user.cpf, age: user.age}
   end
 end
