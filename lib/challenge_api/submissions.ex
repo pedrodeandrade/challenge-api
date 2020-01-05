@@ -67,11 +67,11 @@ defmodule ChallengeApi.Submissions do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_article(%Article{} = article, attrs) do
-    article
-    |> Article.changeset(attrs)
-    |> Repo.update()
-  end
+  #def update_article(%Article{} = article, attrs) do
+    #article
+    #|> Article.changeset(attrs)
+   # |> Repo.update()
+  #end
 
   @doc """
   Deletes a Article.
@@ -98,7 +98,7 @@ defmodule ChallengeApi.Submissions do
       %Ecto.Changeset{source: %Article{}}
 
   """
-  def change_article(%Article{} = article) do
-    Article.changeset(article, %{})
-  end
+  #def change_article(%Article{} = article) do
+    #Article.changeset(article, %{})
+  #end
 end
