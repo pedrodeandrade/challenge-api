@@ -28,6 +28,9 @@ defmodule ChallengeApiWeb.Router do
 
     post "/users/:u_id/article", ArticleController, :create
     get "/articles", ArticleController, :index
+
+    post "/events/create", EventController, :create
+    get "/events", EventController, :index
   end
 
   # Other scopes may use custom stacks.
