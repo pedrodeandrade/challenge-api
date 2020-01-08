@@ -8,7 +8,7 @@ defmodule ChallengeApiWeb.EventController do
 
   def index(conn, _params) do
     events = Events.list_events()
-    render(conn, "index.json", events: events)
+    render(conn, "index_with_articles.json", events: events)
   end
 
   def create(conn, %{"event" => event_params}) do
@@ -21,7 +21,7 @@ defmodule ChallengeApiWeb.EventController do
 
   def show(conn, %{"id" => id}) do
     event = Events.get_event!(id)
-    render(conn, "show.json", event: event)
+    render(conn, "show_with_articles.json", event: event)
   end
 
   def update(conn, %{"id" => id, "event" => event_params}) do

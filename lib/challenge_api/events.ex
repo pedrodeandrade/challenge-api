@@ -8,6 +8,7 @@ defmodule ChallengeApi.Events do
 
   alias ChallengeApi.Events.Event
 
+
   @doc """
   Returns the list of events.
 
@@ -19,7 +20,9 @@ defmodule ChallengeApi.Events do
   """
   def list_events do
     Repo.all(Event)
+    |>Repo.preload(:articles)
   end
+
 
   @doc """
   Gets a single event.
@@ -35,7 +38,10 @@ defmodule ChallengeApi.Events do
       ** (Ecto.NoResultsError)
 
   """
-  def get_event!(id), do: Repo.get!(Event, id)
+  def get_event!(id) do
+     Repo.get!(Event, id)
+     |>Repo.preload(:articles)
+  end
 
   @doc """
   Creates a event.

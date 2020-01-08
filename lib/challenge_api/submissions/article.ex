@@ -23,7 +23,11 @@ defmodule ChallengeApi.Submissions.Article do
     |> validate_required([:title, :text, :event_id])
     |> change(user_id: user_id)
   end
+
+  def update_changeset(article,attrs) do
+    article
+    |> cast(attrs, [:title, :text,:user_id, :event_id])
+    |> validate_required([:title, :text, :event_id])
+  end
 end
 
-
-#SELECT articles.title, articles.text, users.name, events.name FROM articles,users,events where users.id = articles.user_id and articles.event_id = events.id;
