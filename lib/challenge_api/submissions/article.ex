@@ -19,15 +19,8 @@ defmodule ChallengeApi.Submissions.Article do
     {:ok, user_id} = Ecto.Type.cast(:integer, user_id)
 
     article
-    |> cast(attrs, [:title, :text,:user_id, :event_id])
+    |> cast(attrs, [:title, :text, :user_id, :event_id])
     |> validate_required([:title, :text, :event_id])
     |> change(user_id: user_id)
   end
-
-  def update_changeset(article,attrs) do
-    article
-    |> cast(attrs, [:title, :text,:user_id, :event_id])
-    |> validate_required([:title, :text, :event_id])
-  end
 end
-
