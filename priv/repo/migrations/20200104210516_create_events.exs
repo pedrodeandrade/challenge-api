@@ -9,6 +9,5 @@ defmodule ChallengeApi.Repo.Migrations.CreateEvents do
 
       timestamps()
     end
-
   end
 end
