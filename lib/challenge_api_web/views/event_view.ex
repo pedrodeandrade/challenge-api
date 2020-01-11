@@ -4,7 +4,7 @@ defmodule ChallengeApiWeb.EventView do
   alias ChallengeApiWeb.ArticleView
 
   def render("index.json", %{events: events}) do
-    %{data: render_many(events, EventView, "event_with_articles.json")}
+    %{data: render_many(events, EventView, "event.json")}
   end
 
   def render("show.json", %{event: event}) do
