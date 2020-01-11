@@ -6,9 +6,14 @@ defmodule ChallengeApi.AccountsTest do
   describe "users" do
     alias ChallengeApi.Accounts.User
 
-    @valid_attrs %{age: 42, cpf: "some cpf", name: "some name"}
-    @update_attrs %{age: 43, cpf: "some updated cpf", name: "some updated name"}
-    @invalid_attrs %{age: nil, cpf: nil, name: nil}
+    @valid_attrs %{
+      age: 42,
+      cpf: "13213213212",
+      name: "some name",
+      email: "teste@gmail.com",
+      password: "12345678"
+    }
+    @invalid_attrs %{age: "0", cpf: "199222", name: nil, email: "email_adress", password: "123"}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -19,20 +24,16 @@ defmodule ChallengeApi.AccountsTest do
       user
     end
 
-    test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Accounts.list_users() == [user]
-    end
-
     test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
+      user =
+        user_fixture(@valid_attrs)
+        |> remove_pw
+
       assert Accounts.get_user!(user.id) == user
     end
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.age == 42
-      assert user.cpf == "some cpf"
       assert user.name == "some name"
     end
 
@@ -40,29 +41,13 @@ defmodule ChallengeApi.AccountsTest do
       assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
     end
 
-    test "update_user/2 with valid data updates the user" do
-      user = user_fixture()
-      assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
-      assert user.age == 43
-      assert user.cpf == "some updated cpf"
-      assert user.name == "some updated name"
+    test "sign_in_token/2 with valid data returns user and token" do
+      user = user_fixture(@valid_attrs)
+      assert {:ok, user, token} = Accounts.sign_in_token(user.email, user.password)
     end
 
-    test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
-      assert user == Accounts.get_user!(user.id)
-    end
-
-    test "delete_user/1 deletes the user" do
-      user = user_fixture()
-      assert {:ok, %User{}} = Accounts.delete_user(user)
-      assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
-    end
-
-    test "change_user/1 returns a user changeset" do
-      user = user_fixture()
-      assert %Ecto.Changeset{} = Accounts.change_user(user)
+    def remove_pw(user) do
+      Map.replace!(user, :password, nil)
     end
   end
 end

@@ -8,7 +8,6 @@ defmodule ChallengeApi.Events do
 
   alias ChallengeApi.Events.Event
 
-
   @doc """
   Returns the list of events.
 
@@ -20,9 +19,8 @@ defmodule ChallengeApi.Events do
   """
   def list_events do
     Repo.all(Event)
-    |>Repo.preload(:articles)
+    |> Repo.preload(:articles)
   end
-
 
   @doc """
   Gets a single event.
@@ -39,8 +37,8 @@ defmodule ChallengeApi.Events do
 
   """
   def get_event!(id) do
-     Repo.get!(Event, id)
-     |>Repo.preload(:articles)
+    Repo.get!(Event, id)
+    |> Repo.preload(:articles)
   end
 
   @doc """
@@ -59,52 +57,5 @@ defmodule ChallengeApi.Events do
     %Event{}
     |> Event.changeset(attrs)
     |> Repo.insert()
-  end
-
-  @doc """
-  Updates a event.
-
-  ## Examples
-
-      iex> update_event(event, %{field: new_value})
-      {:ok, %Event{}}
-
-      iex> update_event(event, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_event(%Event{} = event, attrs) do
-    event
-    |> Event.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Event.
-
-  ## Examples
-
-      iex> delete_event(event)
-      {:ok, %Event{}}
-
-      iex> delete_event(event)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_event(%Event{} = event) do
-    Repo.delete(event)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking event changes.
-
-  ## Examples
-
-      iex> change_event(event)
-      %Ecto.Changeset{source: %Event{}}
-
-  """
-  def change_event(%Event{} = event) do
-    Event.changeset(event, %{})
   end
 end

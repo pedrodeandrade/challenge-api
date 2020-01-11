@@ -1,5 +1,6 @@
 defmodule ChallengeApiWeb.Router do
   use ChallengeApiWeb, :router
+  alias ChallengeApi.Guardian
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -13,6 +14,10 @@ defmodule ChallengeApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug Guardian.AuthPipeline
+  end
+
   scope "/", ChallengeApiWeb do
     pipe_through :browser
 
@@ -22,17 +27,19 @@ defmodule ChallengeApiWeb.Router do
   scope "/api", ChallengeApiWeb do
     pipe_through :api
 
-    post "/users", UserController, :create
-    get  "/users", UserController, :index
-    get "/users/:id", UserController, :show
-    post "/users/:id/articles", ArticleController, :create
+    post "/signin", UserController, :sign_in
+    post "/signup", UserController, :create
 
-    get "/articles", ArticleController, :index
-    get "/articles/:id", ArticleController, :show
-
-    post "/events", EventController, :create
     get "/events", EventController, :index
     get "/events/:id", EventController, :show
+  end
+
+  scope "/api", ChallengeApiWeb do
+    pipe_through [:api, :auth]
+
+    post "/users/:u_id/articles", ArticleController, :create
+
+    post "/events", EventController, :create
   end
 
   # Other scopes may use custom stacks.

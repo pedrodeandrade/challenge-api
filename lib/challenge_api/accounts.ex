@@ -4,38 +4,11 @@ defmodule ChallengeApi.Accounts do
   """
 
   import Ecto.Query, warn: false
+  import Comeonin.Bcrypt
+
   alias ChallengeApi.Repo
-
   alias ChallengeApi.Accounts.User
-
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
-      iex> list_users()
-      [%User{}, ...]
-
-  """
-  def list_users do
-    Repo.all(User)
-  end
-
-  @doc """
-  Gets a single user.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_user!(id), do: Repo.get!(User, id)
+  alias ChallengeApi.Guardian
 
   @doc """
   Creates a user.
@@ -56,49 +29,60 @@ defmodule ChallengeApi.Accounts do
   end
 
   @doc """
-  Updates a user.
+  Sign in user and return a token
 
   ## Examples
+      iex> sign_in_token(email, password)
+      {:ok,user,token}
 
-      iex> update_user(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+      iex> sign_in_token(wrong_email, wrong_password)
+      {:error, :unauthorized}
 
   """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
+  def sign_in_token(email, password) do
+    with {:ok, user} <- get_by_email(email) do
+      case check_password(password, user) do
+        {:ok, user} ->
+          {:ok, token, _claims} = Guardian.encode_and_sign(user)
+          {:ok, user, token}
+
+        _ ->
+          {:error, :unauthorized}
+      end
+    end
   end
 
   @doc """
-  Deletes a User.
+  Get user by id
 
   ## Examples
+      iex> get_user!(id)
+      %User{}
 
-      iex> delete_user(user)
-      {:ok, %User{}}
-
-      iex> delete_user(user)
-      {:error, %Ecto.Changeset{}}
-
+      iex> get_user!(invalid_id)
+      Ecto.NoResultsError
   """
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
+  def get_user!(id) do
+    Repo.get!(User, id)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
+  defp get_by_email(email) do
+    case Repo.get_by(User, email: email) do
+      nil ->
+        {:error, :email_not_found}
 
-  ## Examples
+      user ->
+        {:ok, user}
+    end
+  end
 
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
+  defp check_password(password, user) do
+    case checkpw(password, user.encrypted_password) do
+      true ->
+        {:ok, user}
 
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
+      false ->
+        {:error, :invalid_password}
+    end
   end
 end
