@@ -5,12 +5,14 @@ defmodule ChallengeApiWeb.ArticleControllerTest do
   alias ChallengeApi.Submissions.Article
 
   @create_attrs %{
-    text: "some text"
+    text: "some text",
+    title: "some_title",
+    event_id: "1"
   }
-  @update_attrs %{
-    text: "some updated text"
-  }
-  @invalid_attrs %{text: nil}
+
+  @user_id 1
+
+  @invalid_attrs %{text: nil, title: nil, event_id: nil}
 
   def fixture(:article) do
     {:ok, article} = Submissions.create_article(@create_attrs)
@@ -21,16 +23,11 @@ defmodule ChallengeApiWeb.ArticleControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  describe "index" do
-    test "lists all articles", %{conn: conn} do
-      conn = get(conn, Routes.article_path(conn, :index))
-      assert json_response(conn, 200)["data"] == []
-    end
-  end
+
 
   describe "create article" do
     test "renders article when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.article_path(conn, :create), article: @create_attrs)
+      conn = post(conn, Routes.article_path(conn, :create), article: @create_attrs, u_id: @user_id)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, Routes.article_path(conn, :show, id))
@@ -44,40 +41,6 @@ defmodule ChallengeApiWeb.ArticleControllerTest do
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.article_path(conn, :create), article: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
-  describe "update article" do
-    setup [:create_article]
-
-    test "renders article when data is valid", %{conn: conn, article: %Article{id: id} = article} do
-      conn = put(conn, Routes.article_path(conn, :update, article), article: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
-
-      conn = get(conn, Routes.article_path(conn, :show, id))
-
-      assert %{
-               "id" => id,
-               "text" => "some updated text"
-             } = json_response(conn, 200)["data"]
-    end
-
-    test "renders errors when data is invalid", %{conn: conn, article: article} do
-      conn = put(conn, Routes.article_path(conn, :update, article), article: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
-  describe "delete article" do
-    setup [:create_article]
-
-    test "deletes chosen article", %{conn: conn, article: article} do
-      conn = delete(conn, Routes.article_path(conn, :delete, article))
-      assert response(conn, 204)
-
-      assert_error_sent 404, fn ->
-        get(conn, Routes.article_path(conn, :show, article))
-      end
     end
   end
 

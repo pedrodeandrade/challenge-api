@@ -2,63 +2,58 @@ defmodule ChallengeApi.SubmissionsTest do
   use ChallengeApi.DataCase
 
   alias ChallengeApi.Submissions
-
+  alias ChallengeApi.Accounts
+  alias ChallengeApi.Events
   describe "articles" do
     alias ChallengeApi.Submissions.Article
 
-    @valid_attrs %{text: "some text"}
-    @update_attrs %{text: "some updated text"}
-    @invalid_attrs %{text: nil}
+    @valid_attrs %{title: "some title",text: "some text"}
+    @invalid_attrs %{text: nil,text: nil,event_id: nil}
+    @user_id
 
-    def article_fixture(attrs \\ %{}) do
-      {:ok, article} =
+    @valid_user_attrs %{
+      age: 42,
+      cpf: "13213213212",
+      name: "some name",
+      email: "teste@gmail.com",
+      password: "12345678"
+    }
+
+    @valid_event_attrs %{date: "09/01/2020", description: "some description", name: "some name"}
+
+    def user_fixture(attrs \\ %{}) do
+      {:ok, user} =
         attrs
-        |> Enum.into(@valid_attrs)
-        |> Submissions.create_article()
+        |> Enum.into(@valid_user_attrs)
+        |> Accounts.create_user()
 
-      article
+      user
     end
 
-    test "list_articles/0 returns all articles" do
-      article = article_fixture()
-      assert Submissions.list_articles() == [article]
-    end
+    def event_fixture(attrs \\ %{}) do
+      {:ok, event} =
+        attrs
+        |> Enum.into(@valid_event_attrs)
+        |> Events.create_event()
 
-    test "get_article!/1 returns the article with given id" do
-      article = article_fixture()
-      assert Submissions.get_article!(article.id) == article
+      event
     end
 
     test "create_article/1 with valid data creates a article" do
-      assert {:ok, %Article{} = article} = Submissions.create_article(@valid_attrs)
+      user = user_fixture(@valid_user_attrs)
+      event = event_fixture(@valid_event_attrs)
+      article_attrs = add_event_id(@valid_attrs, event)
+
+      assert {:ok, %Article{} = article} = Submissions.create_article(article_attrs,user.id)
       assert article.text == "some text"
     end
 
     test "create_article/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Submissions.create_article(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Submissions.create_article(@invalid_attrs,@user_id)
     end
 
-    test "update_article/2 with valid data updates the article" do
-      article = article_fixture()
-      assert {:ok, %Article{} = article} = Submissions.update_article(article, @update_attrs)
-      assert article.text == "some updated text"
-    end
-
-    test "update_article/2 with invalid data returns error changeset" do
-      article = article_fixture()
-      assert {:error, %Ecto.Changeset{}} = Submissions.update_article(article, @invalid_attrs)
-      assert article == Submissions.get_article!(article.id)
-    end
-
-    test "delete_article/1 deletes the article" do
-      article = article_fixture()
-      assert {:ok, %Article{}} = Submissions.delete_article(article)
-      assert_raise Ecto.NoResultsError, fn -> Submissions.get_article!(article.id) end
-    end
-
-    test "change_article/1 returns a article changeset" do
-      article = article_fixture()
-      assert %Ecto.Changeset{} = Submissions.change_article(article)
+    def add_event_id(article_attrs, event) do
+      Map.put(article_attrs,:event_id, event.id)
     end
   end
 end

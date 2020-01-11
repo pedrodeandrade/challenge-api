@@ -11,7 +11,7 @@ defmodule ChallengeApiWeb.EventView do
     %{data: render_one(event, EventView, "event.json")}
   end
 
-  def render("event.json", %{event: event, articles: article}) do
+  def render("event.json", %{event: event}) do
     %{
       id: event.id,
       name: event.name,
@@ -21,7 +21,5 @@ defmodule ChallengeApiWeb.EventView do
     }
   end
 
-  def render("event.json", %{event: event}) do
-    %{id: event.id, name: event.name, description: event.description, date: event.date}
-  end
+
 end
