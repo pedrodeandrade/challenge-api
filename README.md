@@ -18,3 +18,17 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
+## API endpoints 
+  
+  *  POST  /signup - requeste example: `{"user": {"name": "foo", "cpf": "1235678901", "age": "10", "email": "exemplo@gmail.com", "password": "12345678"}}`
+
+  *  POST /signin - requeste example: `{"email": "exemplo@gmail.com", "password": "12345678"}`
+
+  *  POST /users/u_id/articles - requeste example: `{"title": "title", "text": "text", "event_id": "1"}`
+
+  *  POST /events - requeste example: `{"event": {"name": "evento", "description": "descricao de evento", "date": "27/02/2019"}}`
+
+  *  GET /events 
+
+  *  GET /events/id
