@@ -5,14 +5,9 @@ defmodule ChallengeApiWeb.EventControllerTest do
   alias ChallengeApi.Events.Event
 
   @create_attrs %{
-    date: "some date",
+    date: "27/02/2019",
     description: "some description",
     name: "some name"
-  }
-  @update_attrs %{
-    date: "some updated date",
-    description: "some updated description",
-    name: "some updated name"
   }
   @invalid_attrs %{date: nil, description: nil, name: nil}
 
@@ -53,41 +48,6 @@ defmodule ChallengeApiWeb.EventControllerTest do
     end
   end
 
-  describe "update event" do
-    setup [:create_event]
-
-    test "renders event when data is valid", %{conn: conn, event: %Event{id: id} = event} do
-      conn = put(conn, Routes.event_path(conn, :update, event), event: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
-
-      conn = get(conn, Routes.event_path(conn, :show, id))
-
-      assert %{
-               "id" => id,
-               "date" => "some updated date",
-               "description" => "some updated description",
-               "name" => "some updated name"
-             } = json_response(conn, 200)["data"]
-    end
-
-    test "renders errors when data is invalid", %{conn: conn, event: event} do
-      conn = put(conn, Routes.event_path(conn, :update, event), event: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
-  describe "delete event" do
-    setup [:create_event]
-
-    test "deletes chosen event", %{conn: conn, event: event} do
-      conn = delete(conn, Routes.event_path(conn, :delete, event))
-      assert response(conn, 204)
-
-      assert_error_sent 404, fn ->
-        get(conn, Routes.event_path(conn, :show, event))
-      end
-    end
-  end
 
   defp create_event(_) do
     event = fixture(:event)
