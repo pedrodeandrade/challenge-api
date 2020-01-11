@@ -29,6 +29,9 @@ defmodule ChallengeApiWeb.Router do
 
     post "/signin", UserController, :sign_in
     post "/signup", UserController, :create
+
+    get "/events", EventController, :index
+    get "/events/:id", EventController, :show
   end
 
   scope "/api", ChallengeApiWeb do
@@ -37,8 +40,6 @@ defmodule ChallengeApiWeb.Router do
     post "/users/:u_id/articles", ArticleController, :create
 
     post "/events", EventController, :create
-    get "/events", EventController, :index
-    get "/events/:id", EventController, :show
   end
 
   # Other scopes may use custom stacks.
